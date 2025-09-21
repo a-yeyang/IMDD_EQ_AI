@@ -45,7 +45,6 @@ tx_all = [tx_train; tx_test]';
 symb_all = [symb_train; symb_test]';
 save('tx_all_to_vpi.txt', 'tx_all','-ascii');
 save('symb_all.txt', 'symb_all','-ascii');
-
 save('symb_train.txt','symb_train','-ascii');
 save('symb_test.txt','symb_test','-ascii');
 

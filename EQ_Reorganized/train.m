@@ -44,6 +44,8 @@ end
 
 rx=-load('vpi_data.txt');
 rx=2*(rx-mean(rx))/mean(abs(rx));
+
+rx = lowpass(rx, 28, 120);
 rx_train=rx(1:nSymbols_train*sps);
 rx_test=rx(nSymbols_test*sps+1:end);
 
@@ -52,7 +54,7 @@ rx_matched_train = conv(rx_train, rrc,'same');
 rx_matched_test  = conv(rx_test,  rrc,'same');
 
 rx_sym_train = resample(rx_matched_train,Rs,Fs)';
-rx_sym_test  = awgn(resample(rx_matched_test,Rs,Fs)',20);
+rx_sym_test  = awgn(resample(rx_matched_test,Rs,Fs)',15);
 symb_train=load('symb_train.txt');
 symb_test=load('symb_test.txt');
 %% ----------------- 构建训练输入 -----------------
@@ -298,10 +300,11 @@ subplot(3,1,1);
 plot(rx_test_pad ,'.')
 title('无均衡')
 hold on
-subplot(3,1,2)
+subplot(3,1,2);
 title('CMA均衡')
+hold on;
 plot(Pol_X ,'m.')
-subplot(3,1,3)
+subplot(3,1,3);
 plot(eqOut,'r.')
 title('WD-RNN均衡')
 hold off
@@ -310,8 +313,8 @@ hold off
 symErrs = sum(predSymbols ~= symb_test);
 SER_rnn = symErrs / length(symb_test);
 
-fprintf('SER_rnn (symbol error rate) = %.6f\\n', SER_rnn);
-fprintf('SER_cma (symbol error rate) = %.6f\\n', SER_cma);
+fprintf('SER_rnn (symbol error rate) = %.6f\n', SER_rnn);
+fprintf('SER_cma (symbol error rate) = %.6f\n', SER_cma);
 % 比特误码率（以 Gray 反映射近似）
 % 反灰映射：-3->00, -1->01, 1->11, 3->10
 invMap = containers.Map({-3,-1,1,3}, {'00','01','11','10'});
@@ -326,7 +329,7 @@ predBits = join(predBits, ""); predBits = char(predBits);
 trueBits = trueBits(:) - '0'; predBits = predBits(:) - '0';
 bitErrs = sum(predBits ~= trueBits);
 BER_bit = bitErrs / length(trueBits);
-fprintf('BER (bit error rate) = %.6f\n', BER_bit);
+%fprintf('BER (bit error rate) = %.6f\n', BER_bit);
 
 %% ----------------- 可选：权重剪枝（weight pruning）并再次评估 -----------------
 pruning_ratios = [0.0, 0.2, 0.4]; % 包含 p=0 表示不剪枝
