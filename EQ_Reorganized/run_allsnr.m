@@ -56,7 +56,7 @@ fprintf('Model loaded from %s\n', modelFile);
 % 按论文测试范式：无需标签，递归反馈 \~y
 SER_no=zeros(numel(SNR_dB_list),1);
 SER_cma=zeros(numel(SNR_dB_list),1);
-SER_rnn=zeros(numel(SNR_dB_list),1);
+SER_rnn_cls=zeros(numel(SNR_dB_list),1);
 
 parfor i=1:numel(SNR_dB_list)
     rx_sym_test_snr=awgn(rx_sym_test,SNR_dB_list(i))
@@ -121,10 +121,10 @@ parfor i=1:numel(SNR_dB_list)
         predLevels(j)  = yhat;
     end
     symErrs = sum(predSymbols ~= symb_test);
-    SER_rnn(i) = symErrs / length(symb_test)
+    SER_rnn_cls(i) = symErrs / length(symb_test)
 end
 
-fprintf('SER_rnn (symbol error rate) = %.6f\n', SER_rnn);
+fprintf('SER_rnn_cls (symbol error rate) = %.6f\n', SER_rnn_cls);
 fprintf('SER_cma (symbol error rate) = %.6f\n', SER_cma);
 %% ----------------- 绘制比较图 -----------------
 fprintf('\n绘制SNR vs SER比较图...\n');
@@ -133,7 +133,7 @@ figure('Position', [100, 100, 800, 600]);
 semilogy(SNR_dB_list, SER_no, 'ro-', 'LineWidth', 2, 'MarkerSize', 8, 'DisplayName', '无均衡器');
 hold on;
 semilogy(SNR_dB_list, SER_cma, 'bs-', 'LineWidth', 2, 'MarkerSize', 8, 'DisplayName', 'CMA均衡器');
-semilogy(SNR_dB_list, SER_rnn, 'g^-', 'LineWidth', 2, 'MarkerSize', 8, 'DisplayName', 'WD-RNN均衡器');
+semilogy(SNR_dB_list, SER_rnn_cls, 'g^-', 'LineWidth', 2, 'MarkerSize', 8, 'DisplayName', 'WD-RNN-CLS均衡器');
 
 xlabel('信噪比 (dB)', 'FontSize', 14);
 ylabel('误符号率 (SER)', 'FontSize', 14);
@@ -146,14 +146,14 @@ set(gca, 'FontSize', 12);
 ylim([1e-6, 1]);
 
 % 保存结果
-save('equalizer_comparison_results.mat', 'SNR_dB_list', 'SER_no', 'SER_cma', 'SER_rnn');
+save('equalizer_comparison_results.mat', 'SNR_dB_list', 'SER_no', 'SER_cma', 'SER_rnn_cls');
 
 % 输出结果表格
 fprintf('\n=== 测试结果汇总 ===\n');
-fprintf('SNR(dB)\tCMA\t\t无均衡\t\tRNN\n');
+fprintf('SNR(dB)\tCMA\t\t无均衡\t\tRNN_CLS\n');
 fprintf('----------------------------------------\n');
 for i = 1:numSNR
-    fprintf('%d\t%.2e\t%.2e\t%.2e\n', SNR_dB_list(i), SER_cma(i), SER_no(i), SER_rnn(i));
+    fprintf('%d\t%.2e\t%.2e\t%.2e\n', SNR_dB_list(i), SER_cma(i), SER_no(i), SER_rnn_cls(i));
 end
 
 fprintf('\n测试完成！结果已保存到 equalizer_comparison_results.mat\n');
