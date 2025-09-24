@@ -7,7 +7,7 @@ rng(rngSeed, 'twister');
 %% 输入数据处理
 rx_sym_train = rx_sym_train(:);  % 确保是列向量
 symb_train = symb_train(:);      % 确保是列向量
-numTrain = length(symb_train);
+Ntrain = length(symb_train);
 
 %% WD-RNN 架构超参（采用论文优选）
 n0 = 61;                 % 输入节点数（接收窗口样点数）。论文最优为 61。
@@ -54,7 +54,6 @@ padL = floor(n0/2);
 padR = n0 - padL - 1;
 rx_train_pad = [zeros(padL,1); rx_sym_train; zeros(padR+k_delay,1)]; % pad 额外保证延迟取值安全
 
-Ntrain = numTrain;
 inputDim = n0 + k_delay;
 
 Xtrain = zeros(inputDim, Ntrain);
