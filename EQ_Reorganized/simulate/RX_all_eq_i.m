@@ -69,6 +69,8 @@ parfor ii=1:numel(SNR_dB_list)
 [SER_wdrnn_pre_eq(ii), ~, ~, ~] = test_wdrnn(modelFile1, awgn(rx_sym_test,SNR_dB_list(ii)), symb_test);
 [SER_wdrnn(ii), ~, ~, ~]        = test_wdrnn(modelFile2, awgn(rx_sym_test,SNR_dB_list(ii)), symb_test);
 end
+modelFile3 = wd_rnn_light(rx_sym_train, symb_train); 
+SER_wdrnn_light = test_wdrnn_light(modelFile3, rx_sym_test, symb_test, SNR_dB_list)
 %% ----------------- 绘制比较图 -----------------
 fprintf('\n绘制SNR vs SER比较图...\n');
 
