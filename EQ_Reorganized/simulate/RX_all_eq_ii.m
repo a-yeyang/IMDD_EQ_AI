@@ -37,7 +37,7 @@ rx_sym_test  = resample(rx_matched_test,Rs,Fs)';
 symb_train=load('symb_train.txt');
 symb_test=load('symb_test.txt');
 modelFile1=wd_rnn(rx_sym_train,symb_train);
-modelFile2=wd_rnn1(rx_sym_train,symb_train);
+modelFile2=train_cwd_rnn(rx_sym_train,symb_train);
 
 %% ----------------- 测试阶段 -----------------
 % 测试无均衡器和CMA均衡器
@@ -65,7 +65,7 @@ test_options.useGPU = useGPU;
 
 parfor ii=1:numel(SNR_dB_list)
 [SER_wdrnn(ii), ~, ~, ~]= test_wdrnn     (modelFile1, awgn(rx_sym_test,SNR_dB_list(ii)), symb_test);
-[SER_wdrnn1(ii), ~, ~, ~] = test_wdrnn    (modelFile2, awgn(rx_sym_test,SNR_dB_list(ii)), symb_test);
+[SER_wdrnn1(ii), ~, ~, ~] = test_cwd_rnn    (modelFile2, awgn(rx_sym_test,SNR_dB_list(ii)), symb_test);
 end
 %% ----------------- 绘制比较图 -----------------
 fprintf('\n绘制SNR vs SER比较图...\n');
