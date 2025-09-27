@@ -104,12 +104,12 @@ def train_model(pam4_system, device, seq_len, d_model, n_layers, n_head, epochs,
     
     # 生成训练和验证数据
     print("生成训练数据...")
-    train_rx, train_tx = generate_data(pam4_system, train_channel, num_symbols=500_000, seq_len=seq_len)
+    train_rx, train_tx = generate_data(pam4_system, train_channel, num_symbols=655360, seq_len=seq_len)
     train_dataset = TensorDataset(train_rx, train_tx)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     
     print("生成验证数据...")
-    val_rx, val_tx = generate_data(pam4_system, train_channel, num_symbols=50_000, seq_len=seq_len)
+    val_rx, val_tx = generate_data(pam4_system, train_channel, num_symbols=655360, seq_len=seq_len)
     val_dataset = TensorDataset(val_rx, val_tx)
     val_loader = DataLoader(val_dataset, batch_size=batch_size)
     
@@ -171,7 +171,7 @@ def test_different_snr(pam4_system, device, seq_len, batch_size, model_path, snr
         test_channel = OpticalChannel(snr_db=snr_db)
         
         # 生成测试数据
-        test_rx, test_tx = generate_data(pam4_system, test_channel, num_symbols=100_000, seq_len=seq_len)
+        test_rx, test_tx = generate_data(pam4_system, test_channel, num_symbols=1000_000, seq_len=seq_len)
         test_dataset = TensorDataset(test_rx, test_tx)
         test_loader = DataLoader(test_dataset, batch_size=batch_size)
         
