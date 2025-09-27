@@ -6,7 +6,7 @@ class OpticalChannel:
     def __init__(self, snr_db):
         self.snr_db = snr_db
 
-    def propagate(self, signal):
+    def channel1(self, signal):
         # Add AWGN
         # plt.plot(signal, '.');
         # plt.show()
